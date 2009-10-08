@@ -1,0 +1,59 @@
+MySQL UDF for IPv6
+
+This is an experimental runtime plugin (UDF) for MySQL
+that adds some basic IPv6 functions that MySQL is still lacking:
+inet_ntop(3) and inet_pton(3).
+
+These files are experimental and provided as-is under a GPL license.
+
+Pieter Ennes (pieter@watchmouse.com)
+©2009 WatchMouse
+
+
+INSTALLATION
+
+Install required compile time dependencies, on Debian these are:
+
+    $ apt-get install libmysqlclient-dev
+
+Compile the UDF:
+
+    $ wget http://labs.watchmouse.com/mysql-udf-ipv6-latest.tar.gz
+    $ tar xvfz mysql-udf-ipv6-latest.tar.gz
+    $ cd mysql-udf-ipv6-[version]
+    $ make
+
+Install the shared object in your library search path:
+
+    $ sudo make install
+
+
+USAGE
+
+mysql> CREATE FUNCTION ntop RETURNS STRING SONAME "mysql_udf_ipv6.so";
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE FUNCTION pton RETURNS STRING SONAME "mysql_udf_ipv6.so";
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+EXAMPLES
+
+mysql> select ntop(pton('1.2.3.4')), ntop(pton('fe80::20e:cff:fe84:7092'));
++-----------------------+---------------------------------------+
+| ntop(pton('1.2.3.4')) | ntop(pton('fe80::20e:cff:fe84:7092')) |
++-----------------------+---------------------------------------+
+| 1.2.3.4               | fe80::20e:cff:fe84:7092               | 
++-----------------------+---------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select length(pton('1.2.3.4')), length(pton('fe80::20e:cff:fe84:7092'));
++-------------------------+-----------------------------------------+
+| length(pton('1.2.3.4')) | length(pton('fe80::20e:cff:fe84:7092')) |
++-------------------------+-----------------------------------------+
+|                       4 |                                      16 | 
++-------------------------+-----------------------------------------+
+1 row in set (0.01 sec)
+
+You can neatly store the output of pton() in a VARBINARY(16) column.
