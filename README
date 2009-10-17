@@ -1,6 +1,6 @@
 MySQL UDF for IPv6
 
-This is an experimental runtime plugin (UDF) for MySQL
+This is an experimental runtime plug-in (UDF) for MySQL
 that adds some basic IPv6 functions that MySQL is still lacking:
 inet_ntop(3) and inet_pton(3).
 
@@ -10,9 +10,16 @@ Pieter Ennes (pieter@watchmouse.com)
 ©2009 WatchMouse
 
 
-INSTALLATION
+DISCLAMER
+---------
 
-Install required compile time dependencies, on Debian these are:
+These plug-ins should be considered alpha quality at best. The install instructions are only for Debian GNU/Linux (etch/lenny) at the moment.
+
+
+INSTALLATION
+------------
+
+Install required compile time dependencies, on Debian you probably catch most of them with:
 
     $ apt-get install libmysqlclient-dev
 
@@ -27,33 +34,56 @@ Install the shared object in your library search path:
 
     $ sudo make install
 
+Note that the plug-in install path has changed around MySQL version 5.0.67, make sure to select the correct path in the Makefile.
+
 
 USAGE
+-----
 
-mysql> CREATE FUNCTION ntop RETURNS STRING SONAME "mysql_udf_ipv6.so";
+mysql> CREATE FUNCTION inet6_ntop RETURNS STRING SONAME "mysql_udf_ipv6.so";
 Query OK, 0 rows affected (0.02 sec)
 
-mysql> CREATE FUNCTION pton RETURNS STRING SONAME "mysql_udf_ipv6.so";
+mysql> CREATE FUNCTION inet6_pton RETURNS STRING SONAME "mysql_udf_ipv6.so";
 Query OK, 0 rows affected (0.00 sec)
 
+mysql> CREATE FUNCTION inet6_rlookupn RETURNS STRING SONAME "mysql_udf_ipv6.so";
+Query OK, 0 rows affected (0.00 sec)
+
+Unload them with:
+mysql> drop function inet6_rlookup; drop function inet6_pton; drop function inet6_ntop;
 
 
 EXAMPLES
+--------
 
-mysql> select ntop(pton('1.2.3.4')), ntop(pton('fe80::20e:cff:fe84:7092'));
-+-----------------------+---------------------------------------+
-| ntop(pton('1.2.3.4')) | ntop(pton('fe80::20e:cff:fe84:7092')) |
-+-----------------------+---------------------------------------+
-| 1.2.3.4               | fe80::20e:cff:fe84:7092               | 
-+-----------------------+---------------------------------------+
+Notation conversion functions:
+
+mysql> select inet6_ntop(inet6_pton('2001:4860:a005::68')), inet6_ntop(inet6_pton('1.2.3.4'));
++----------------------------------------------+-----------------------------------+
+| inet6_ntop(inet6_pton('2001:4860:a005::68')) | inet6_ntop(inet6_pton('1.2.3.4')) |
++----------------------------------------------+-----------------------------------+
+| 2001:4860:a005::68                           | 1.2.3.4                           | 
++----------------------------------------------+-----------------------------------+
 1 row in set (0.00 sec)
 
-mysql> select length(pton('1.2.3.4')), length(pton('fe80::20e:cff:fe84:7092'));
-+-------------------------+-----------------------------------------+
-| length(pton('1.2.3.4')) | length(pton('fe80::20e:cff:fe84:7092')) |
-+-------------------------+-----------------------------------------+
-|                       4 |                                      16 | 
-+-------------------------+-----------------------------------------+
-1 row in set (0.01 sec)
+mysql> select length(inet6_pton('2001:4860:a005::68')), length(inet6_pton('1.2.3.4'));
++------------------------------------------+-------------------------------+
+| length(inet6_pton('2001:4860:a005::68')) | length(inet6_pton('1.2.3.4')) |
++------------------------------------------+-------------------------------+
+|                                       16 |                             4 | 
++------------------------------------------+-------------------------------+
+1 row in set (0.00 sec)
 
-You can neatly store the output of pton() in a VARBINARY(16) column.
+You can neatly store the output of inet6_pton() in a VARBINARY(16) column.
+
+Lookup functions:
+
+mysql> select inet6_rlookupn(inet6_pton('2001:4860:a005::68')), inet6_rlookupn(inet6_pton('64.128.190.61'));
++--------------------------------------------------+---------------------------------------------+
+| inet6_rlookupn(inet6_pton('2001:4860:a005::68')) | inet6_rlookupn(inet6_pton('64.128.190.61')) |
++--------------------------------------------------+---------------------------------------------+
+| ey-in-x68.google.com                             | ny.watchmouse.com                           | 
++--------------------------------------------------+---------------------------------------------+
+1 row in set (0.03 sec)
+
+Don't push too many rows through the lookup function, as each lookup may take many seconds to complete.

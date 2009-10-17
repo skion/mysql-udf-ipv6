@@ -23,7 +23,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * $id$
+ * $Id$
  */
 
 #include <mysql.h>
@@ -48,9 +48,9 @@ void inet6_ntop_deinit(UDF_INIT *initid);
 char *inet6_ntop(UDF_INIT *initid, UDF_ARGS *args, char *result,
         unsigned long *length, char *null_value, char *error);
 
-my_bool inet6_gethostbyname_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
-void inet6_gethostbyname_deinit(UDF_INIT *initid);
-char *inet6_gethostbyname(UDF_INIT *initid, UDF_ARGS *args, char *result,
+my_bool inet6_rlookupn_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+void inet6_rlookupn_deinit(UDF_INIT *initid);
+char *inet6_rlookupn(UDF_INIT *initid, UDF_ARGS *args, char *result,
         unsigned long *length, char *null_value, char *error);
 
 
@@ -67,7 +67,7 @@ char *inet6_gethostbyname(UDF_INIT *initid, UDF_ARGS *args, char *result,
 my_bool inet6_pton_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 {
     if (args->arg_count != 1 || args->arg_type[0] != STRING_RESULT) {
-        strmov(message, "Wrong arguments to inet6_pton: provide human readable ipv4 or ipv6 address");
+        strmov(message, "Wrong arguments to INET6_PTON: provide human readable IPv4 or IPv6 address.");
         return 1;
     }
     initid->max_length = INET6_ADDRLEN; // # bytes in INET6
@@ -84,7 +84,6 @@ char *inet6_pton(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char 
         unsigned long *res_length, char *null_value, char *error __attribute__((unused)))
 {
     char temp[INET6_ADDRSTRLEN + 1];
-    char buff[INET6_ADDRLEN];
     uint length;
     int af;
 
@@ -122,7 +121,7 @@ char *inet6_pton(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char 
  *
  * Convert IPv4 or IPv6 VARBINARY(16) format to presentation string.
  *
- * Example: SELECT NTOP(PTON('1.2.3.4')), NTOP(PTON('fe80::219:e3ff:1:9317'));
+ * Example: SELECT INET6_NTOP(INET6_PTON('1.2.3.4')), INET6_NTOP(INET6_PTON('fe80::219:e3ff:1:9317'));
  *
  * @arg    string   varbinary format ipv4 or ipv6 address
  * @return string   max 46 character presentation string
@@ -130,10 +129,10 @@ char *inet6_pton(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char 
 my_bool inet6_ntop_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 {
     if (args->arg_count != 1 || args->arg_type[0] != STRING_RESULT) {
-        strmov(message, "Wrong arguments to inet6_ntop: provide 4 or 16 byte binary representation");
+        strmov(message, "Wrong arguments to INET6_NTOP: provide 4 or 16 byte binary representation.");
         return 1;
     }
-    initid->max_length = INET6_ADDRSTRLEN; // max length of ipv6 presentation string
+    initid->max_length = INET6_ADDRSTRLEN+1; // max length of ipv6 presentation string
     initid->maybe_null = 1;
     initid->const_item = 0;
     return 0;
@@ -167,7 +166,7 @@ char *inet6_ntop(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char 
     }
 
     // convert
-    if (!inet_ntop(af, args->args[0], result, INET6_ADDRSTRLEN + 1)) {
+    if (!inet_ntop(af, args->args[0], result, INET6_ADDRSTRLEN+1)) {
         *null_value = 1;
         return 0;
     }
@@ -178,81 +177,82 @@ char *inet6_ntop(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char 
 
 
 /**
- * inet6_gethostbyname()
+ * inet6_rlookupn()
  *
- * Resolve IPv6 or IPv4 host to IP address.
+ * Resolve binary IPv6 or IPv4 address to host name.
  *
- * Example: SELECT INET6_GETHOSTBYNAME('ipv6.google.com'), INET6_GETHOSTBYNAME('fe80::219:e3ff:1:9317');
+ * Example: SELECT INET6_RLOOKUPN(INET6_PTON('2001:4860:a005::68')), INET6_RLOOKUPN(INET6_PTON('64.128.190.61'));
  *
- * @arg    string   host name
- * @return string   resolved IP in presentation form
+ * @arg    string   varbinary format ipv4 or ipv6 address
+ * @return string   resolved host in presentation form
  */
-my_bool inet6_gethostbyname_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+my_bool inet6_rlookupn_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 {
     if (args->arg_count != 1 || args->arg_type[0] != STRING_RESULT) {
-        strmov(message, "Wrong arguments to inet6_gethostbyname: provide human readable ipv4 or ipv6 address");
+        strmov(message, "Wrong arguments to INET6_RLOOKUPN: provide IPv4 or IPv6 address in INET6_PTON form.");
         return 1;
     }
-    initid->max_length = INET6_ADDRSTRLEN; // # bytes in INET6
+    initid->max_length = NI_MAXHOST;
     initid->maybe_null = 1;
-    initid->const_item = 0; // @@@ constant here?
+    initid->const_item = 0;
     return 0;
 }
 
-void inet6_gethostbyname_deinit(UDF_INIT *initid __attribute__((unused)))
+void inet6_rlookupn_deinit(UDF_INIT *initid __attribute__((unused)))
 {
 }
 
-char *inet6_gethostbyname(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char *result,
+char *inet6_rlookupn(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char *result,
         unsigned long *res_length, char *null_value, char *error __attribute__((unused)))
 {
-    struct hostent he, *heptr;          // malloc these in init
-    char temp[128];
-    char buff[256];
-    uint length;
-    int af, errno;
+    const struct sockaddr_storage sa;
+    const char *addr = args->args[0];
+    const uint length = args->lengths[0];
+    ushort i;
 
-    if (!args->args[0] || !(length = args->lengths[0])) {
+    if (!addr || !length) {
         *null_value = 1;
         return 0;
     }
 
-    // cannot assume null-terminated string according to manual
-    if (length >= sizeof(temp))
-        length = sizeof(temp) - 1;
-    memcpy(temp, args->args[0], length);
-    temp[length] = 0;
+    if (length == INET6_ADDRLEN) {
+        struct sockaddr_in6 *sa6 = (struct sockaddr_in6 *) &sa;
 
-    // reentrant
-    //    extern int gethostbyname2_r (__const char *__restrict __name, int __af,
-    //                                 struct hostent *__restrict __result_buf,
-    //                                 char *__restrict __buf, size_t __buflen,
-    //                                 struct hostent **__restrict __result,
-    //                                 int *__restrict __h_errnop);
+        sa6->sin6_family = AF_INET6;
+        for (i = 0; i < length; i++)
+            sa6->sin6_addr.s6_addr[i] = addr[i];
 
-    // try to resolve ipv6 host
-    gethostbyname2_r(temp, AF_INET6, &he, buff, sizeof(buff), &heptr, &errno);
-    if (errno) {
-        // fallback to ipv4
-        gethostbyname2_r(temp, AF_INET, &he, buff, sizeof(buff), &heptr, &errno);
-    }
+    } else if (length == INET_ADDRLEN) {
+        struct sockaddr_in *sa4 = (struct sockaddr_in *) &sa;
+        char *dest = (char *) &sa4->sin_addr.s_addr;
 
-    if (errno || !inet_ntop(he.h_addrtype, he.h_addr_list[0], result, INET6_ADDRSTRLEN + 1)) {
+        sa4->sin_family = AF_INET;
+        for (i = 0; i < length; i++)
+            dest[i] = addr[i];
+
+    } else {
         *null_value = 1;
         return 0;
     }
+
+    if (getnameinfo((struct sockaddr *) &sa, sizeof(sa), result, NI_MAXHOST, NULL, 0, NI_NAMEREQD)) {
+        *null_value = 1;
+        return 0;
+    }
+
     *res_length = strlen(result);
     return result;
 }
 
 /*
  * TODO:
- * inet6_getaddrbyname
+ * inet6_lookup()
+ * inet6_lookupn()
+ * inet6_rlookup()
  * inet6_network(ip, cidr/mask)
  * inet6_broadcast(ip, cidr/mask)
  * inet6_numhosts(cidr/mask)
  * inet6_netmask(cidr)
  * inet6_cidr(netmask)
  * inet6_contains(ip, network, cidr/mask)
- * inet6_expanded(ip) expanded v6 notation
  */
