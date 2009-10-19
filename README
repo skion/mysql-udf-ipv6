@@ -1,19 +1,39 @@
-MySQL UDF for IPv6
+IPv6 functions for MySQL
+------------------------
 
 This is an experimental runtime plug-in (UDF) for MySQL
 that adds some basic IPv6 functions that MySQL is still lacking:
 inet_ntop(3) and inet_pton(3).
 
-These files are experimental and provided as-is under a GPL license.
+These files are experimental and provided as-is under a EUPL license.
 
 Pieter Ennes (pieter@watchmouse.com)
-©2009 WatchMouse
+
+Copyright ©2009 WatchMouse
 
 
-DISCLAMER
----------
+LICENSE
+-------
 
-These plug-ins should be considered alpha quality at best. The install instructions are only for Debian GNU/Linux (etch/lenny) at the moment.
+Licensed under the EUPL, Version 1.1 or – as soon they will be approved
+by the European Commission - subsequent versions of the EUPL (the "Licence");
+You may not use this work except in compliance with the Licence. You may
+obtain a copy of the Licence at:
+
+   http://ec.europa.eu/idabc/eupl
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the Licence is distributed on an "AS IS" basis,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the Licence for the specific language governing permissions and
+limitations under the Licence.
+
+
+DISCLAIMER
+----------
+
+These plug-ins should be considered alpha quality at best. The install instructions are only for
+Debian GNU/Linux (etch/lenny) or derivatives at the moment.
 
 
 INSTALLATION
