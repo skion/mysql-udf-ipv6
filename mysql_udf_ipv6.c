@@ -30,12 +30,10 @@
 #include <string.h>
 #include <arpa/inet.h>          // for inet_ntop and inet_pton
 #include <netdb.h>
-#define strmov(a,b) strcpy(a,b)
 
 // 4 and 16 byte address lengths
 #define INET_ADDRLEN (sizeof(struct in_addr))
 #define INET6_ADDRLEN (sizeof(struct in6_addr))
-
 
 my_bool inet6_pton_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 void inet6_pton_deinit(UDF_INIT *initid);
@@ -66,7 +64,7 @@ char *inet6_rlookupn(UDF_INIT *initid, UDF_ARGS *args, char *result,
 my_bool inet6_pton_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 {
     if (args->arg_count != 1 || args->arg_type[0] != STRING_RESULT) {
-        strmov(message, "Wrong arguments to INET6_PTON: provide human readable IPv4 or IPv6 address.");
+        strcpy(message, "Wrong arguments to INET6_PTON: provide human readable IPv4 or IPv6 address.");
         return 1;
     }
     initid->max_length = INET6_ADDRLEN; // # bytes in INET6
@@ -128,7 +126,7 @@ char *inet6_pton(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char 
 my_bool inet6_ntop_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 {
     if (args->arg_count != 1 || args->arg_type[0] != STRING_RESULT) {
-        strmov(message, "Wrong arguments to INET6_NTOP: provide 4 or 16 byte binary representation.");
+        strcpy(message, "Wrong arguments to INET6_NTOP: provide 4 or 16 byte binary representation.");
         return 1;
     }
     initid->max_length = INET6_ADDRSTRLEN+1; // max length of ipv6 presentation string
@@ -188,7 +186,7 @@ char *inet6_ntop(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char 
 my_bool inet6_rlookupn_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 {
     if (args->arg_count != 1 || args->arg_type[0] != STRING_RESULT) {
-        strmov(message, "Wrong arguments to INET6_RLOOKUPN: provide IPv4 or IPv6 address in INET6_PTON form.");
+        strcpy(message, "Wrong arguments to INET6_RLOOKUPN: provide IPv4 or IPv6 address in INET6_PTON form.");
         return 1;
     }
     initid->max_length = NI_MAXHOST;
