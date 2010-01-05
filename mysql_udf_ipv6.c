@@ -28,6 +28,8 @@
 #include <mysql.h>
 #include <ctype.h>
 #include <string.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>          // for inet_ntop and inet_pton
 #include <netdb.h>
 
