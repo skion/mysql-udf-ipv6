@@ -1,0 +1,7 @@
+
+2009-10-20: Version 0.1
+
+2010-01-09: Version 0.2
+  - FreeBSD patch from Edwin Ringersma
+  - Added inet6_lookup and inet6_rlookup (replaces inet6_rlookupn)
+  

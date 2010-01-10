@@ -2,14 +2,14 @@ IPv6 functions for MySQL
 ------------------------
 
 This is an experimental runtime plug-in (UDF) for MySQL
-that adds some basic IPv6 functions that MySQL is still lacking:
+that adds some basic IPv6 functions that MySQL v5 is still lacking:
 inet_ntop(3) and inet_pton(3).
 
 These files are experimental and provided as-is under a EUPL license.
 
 Pieter Ennes (pieter@watchmouse.com)
 
-Copyright ©2009 WatchMouse
+Copyright ©2009-2010 WatchMouse
 
 
 LICENSE
@@ -66,11 +66,14 @@ Query OK, 0 rows affected (0.02 sec)
 mysql> CREATE FUNCTION inet6_pton RETURNS STRING SONAME "mysql_udf_ipv6.so";
 Query OK, 0 rows affected (0.00 sec)
 
-mysql> CREATE FUNCTION inet6_rlookupn RETURNS STRING SONAME "mysql_udf_ipv6.so";
+mysql> CREATE FUNCTION inet6_lookup RETURNS STRING SONAME "mysql_udf_ipv6.so";
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CREATE FUNCTION inet6_rlookup RETURNS STRING SONAME "mysql_udf_ipv6.so";
 Query OK, 0 rows affected (0.00 sec)
 
 Unload them with:
-mysql> drop function inet6_rlookup; drop function inet6_pton; drop function inet6_ntop;
+mysql> drop function inet6_rlookup; drop function inet6_lookup; drop function inet6_pton; drop function inet6_ntop;
 
 
 EXAMPLES
@@ -98,12 +101,28 @@ You can neatly store the output of inet6_pton() in a VARBINARY(16) column.
 
 Lookup functions:
 
-mysql> select inet6_rlookupn(inet6_pton('2001:4860:a005::68')), inet6_rlookupn(inet6_pton('64.128.190.61'));
-+--------------------------------------------------+---------------------------------------------+
-| inet6_rlookupn(inet6_pton('2001:4860:a005::68')) | inet6_rlookupn(inet6_pton('64.128.190.61')) |
-+--------------------------------------------------+---------------------------------------------+
-| ey-in-x68.google.com                             | ny.watchmouse.com                           | 
-+--------------------------------------------------+---------------------------------------------+
-1 row in set (0.03 sec)
+mysql> select inet6_lookup('www.watchmouse.com');
++------------------------------------+
+| inet6_lookup('www.watchmouse.com') |
++------------------------------------+
+| 2001:1938:80:73::2                 | 
++------------------------------------+
+1 row in set (2.08 sec)
+
+mysql> select inet6_rlookup('2a02:f8::ffff:ffe5'), inet6_rlookup('64.128.190.61');
++-------------------------------------+--------------------------------+
+| inet6_rlookup('2a02:f8::ffff:ffe5') | inet6_rlookup('64.128.190.61') |
++-------------------------------------+--------------------------------+
+| it.watchmouse.com                   | ny.watchmouse.com              | 
++-------------------------------------+--------------------------------+
+1 row in set (0.07 sec)
+
+mysql> select inet6_rlookup(inet6_pton('2a02:f8::ffff:ffe5')), inet6_rlookup(inet6_pton('64.128.190.61'));
++-------------------------------------------------+--------------------------------------------+
+| inet6_rlookup(inet6_pton('2a02:f8::ffff:ffe5')) | inet6_rlookup(inet6_pton('64.128.190.61')) |
++-------------------------------------------------+--------------------------------------------+
+| it.watchmouse.com                               | ny.watchmouse.com                          | 
++-------------------------------------------------+--------------------------------------------+
+1 row in set (0.04 sec)
 
 Don't push too many rows through the lookup function, as each lookup may take many seconds to complete.
