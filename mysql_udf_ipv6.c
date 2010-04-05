@@ -23,6 +23,9 @@
  * limitations under the Licence.
  *
  * $Id$
+ *
+ * @todo: allow inet_ntoa style (integer) input
+ * @todo: allow big-int style input?
  */
 
 #include <mysql.h>
@@ -32,10 +35,14 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>          // for inet_ntop and inet_pton
 #include <netdb.h>
+#include <limits.h>
 
 // 4 and 16 byte address lengths
 #define INET_ADDRLEN (sizeof(struct in_addr))
 #define INET6_ADDRLEN (sizeof(struct in6_addr))
+
+#define min(x, y)       ((x) < (y) ? (x) : (y))
+#define max(x, y)       ((x) > (y) ? (x) : (y))
 
 my_bool inet6_pton_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 void inet6_pton_deinit(UDF_INIT *initid);
@@ -45,6 +52,11 @@ char *inet6_pton(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *
 my_bool inet6_ntop_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 void inet6_ntop_deinit(UDF_INIT *initid);
 char *inet6_ntop(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length,
+        char *null_value, char *error);
+
+my_bool inet6_mask_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+void inet6_mask_deinit(UDF_INIT *initid);
+char *inet6_mask(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length,
         char *null_value, char *error);
 
 my_bool inet6_lookup_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
@@ -187,6 +199,66 @@ char *inet6_ntop(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char 
     }
 
     *res_length = strlen(result);
+    return result;
+}
+
+/**
+ * inet6_mask()
+ *
+ * Convert IPv4 or IPv6 VARBINARY(16) format to presentation string.
+ *
+ * Example: SELECT INET6_NTOP(INET6_PTON('1.2.3.4')), INET6_NTOP(INET6_PTON('fe80::219:e3ff:1:9317'));
+ *
+ * @arg    string   varbinary format ipv4 or ipv6 address
+ * @return string   max 46 character presentation string
+ */
+my_bool inet6_mask_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    if (args->arg_count != 2 || args->arg_type[0] != STRING_RESULT || args->arg_type[1] != INT_RESULT)
+    {
+        strcpy(message,
+                "Wrong arguments to INET6_MASK: provide 4 or 16 byte binary representation and integer mask.");
+        return 1;
+    }
+    initid->max_length = INET6_ADDRLEN; // max length of ipv6 binary string
+    initid->maybe_null = 1;
+    initid->const_item = 0;
+    return 0;
+}
+
+void inet6_mask_deinit(UDF_INIT *initid __attribute__((unused)))
+{
+}
+
+char *inet6_mask(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char *result, unsigned long *res_length,
+        char *null_value, char *error __attribute__((unused)))
+{
+    unsigned long length = args->lengths[0];
+    long long mask = *((long long *) args->args[1]);
+    unsigned char mask8, i;
+
+    if (!args->args[0] || !length)
+    {
+        *null_value = 1;
+        return 0;
+    }
+
+    // check mask parameter
+    if (!args->args[1] || !(args->lengths[1]) || mask < 0 || mask > length * CHAR_BIT)
+    {
+        *null_value = 1;
+        return 0;
+    }
+
+    // my ugly get-the-job-done 128-bit masking
+    for (i = 0; i < length; i++)
+    {
+        mask8 = min(mask, CHAR_BIT);
+        result[i] = args->args[0][i] & ((1 << mask8) - 1);
+        mask = mask - mask8;
+    }
+
+    *res_length = length;
     return result;
 }
 

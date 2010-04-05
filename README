@@ -99,6 +99,34 @@ mysql> select length(inet6_pton('2001:4860:a005::68')), length(inet6_pton('1.2.3
 
 You can neatly store the output of inet6_pton() in a VARBINARY(16) column.
 
+Mask function:
+
+mysql> select inet6_ntop(inet6_mask(inet6_pton('192.0.2.123'), 24)) as 24bit,
+              inet6_ntop(inet6_mask(inet6_pton('2001:db8:1234::1234'), 64)) as 64bit;
++-----------+-----------------+
+| 24bit     | 64bit           |
++-----------+-----------------+
+| 192.0.2.0 | 2001:db8:1234:: | 
++-----------+-----------------+
+1 row in set (0.00 sec)
+
+mysql> select inet6_mask(inet6_pton('2001:db8:1::1'), 64) = inet6_mask(inet6_pton('2001:db8:1::2'), 64) as samenet;
++---------+
+| samenet |
++---------+
+|       1 | 
++---------+
+1 row in set (0.00 sec)
+
+mysql> select inet6_mask(inet6_pton('2001:db8:1::1'), 64) = inet6_mask(inet6_pton('2001:db8:2::2'), 64) as samenet;
++---------+
+| samenet |
++---------+
+|       0 | 
++---------+
+1 row in set (0.00 sec)
+
+
 Lookup functions:
 
 mysql> select inet6_lookup('www.watchmouse.com');
