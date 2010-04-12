@@ -1,7 +1,35 @@
+2010-04-13 00:54:43 BST  pieter
 
-2009-10-20: Version 0.1
+    add inet6_mask to documentation
 
-2010-01-09: Version 0.2
-  - FreeBSD patch from Edwin Ringersma
-  - Added inet6_lookup and inet6_rlookup (replaces inet6_rlookupn)
-  
+2010-04-13 00:53:04 BST  pieter
+
+    netmask loop bugfix
+
+2010-04-05 17:06:47 BST  pieter (version 0.3)
+
+    add inet6_mask() function for Matthias Kuhn
+
+2010-04-05 12:08:07 BST  pieter
+
+    reindent for readability.
+
+2010-01-10 00:02:53 GMT  pieter (version 0.2)
+
+    added inet6_lookup and inet6_rlookup; removed inet6_rlookupn
+
+2010-01-05 10:31:58 GMT  pieter
+
+    FreeBSD patch from Edwin Ringersma
+
+2009-10-19 23:23:06 BST  pieter (version 0.1)
+
+    remove #define from example code
+
+2009-10-19 23:17:29 BST  pieter
+
+    change license from lgpl to eupl
+
+2009-10-17 15:21:03 BST  pieter
+
+    use getnameinfo(), not gethostbyaddr() for reverse lookups; cleanups
