@@ -251,11 +251,14 @@ char *inet6_mask(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char 
     }
 
     // my ugly get-the-job-done 128-bit masking
-    for (i = 0; i < length; i++)
+    memset(result, 0, INET6_ADDRLEN);
+    for (i = 0; i < INET6_ADDRLEN, mask >= 8; i++, mask -= 8)
     {
-        mask8 = min(mask, CHAR_BIT);
-        result[i] = args->args[0][i] & ((1 << mask8) - 1);
-        mask = mask - mask8;
+        result[i] = args->args[0][i];
+    }
+    if (mask)
+    {
+        result[i] = args->args[0][i++] & (((~0) << (8-mask)) & 255);
     }
 
     *res_length = length;
