@@ -72,8 +72,11 @@ Query OK, 0 rows affected (0.00 sec)
 mysql> CREATE FUNCTION inet6_rlookup RETURNS STRING SONAME "mysql_udf_ipv6.so";
 Query OK, 0 rows affected (0.00 sec)
 
+mysql> CREATE FUNCTION inet6_mask RETURNS STRING SONAME "mysql_udf_ipv6.so";
+Query OK, 0 rows affected (0.00 sec)
+
 Unload them with:
-mysql> drop function inet6_rlookup; drop function inet6_lookup; drop function inet6_pton; drop function inet6_ntop;
+mysql> drop function inet6_rlookup; drop function inet6_lookup; drop function inet6_pton; drop function inet6_ntop; drop function inet6_mask;
 
 
 EXAMPLES
