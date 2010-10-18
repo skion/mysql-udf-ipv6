@@ -1,0 +1,22 @@
+This package was debianized by Brian P Kroth <bpkroth@cae.wisc.edu> on
+Mon, 20 Sep 2010 16:10:42 -0500.
+
+It was downloaded from <http://labs.watchmouse.com/2009/10/extending-mysql-5-with-ipv6-functions/>
+
+Upstream Author(s):
+
+    Pieter Ennes <pieter@watchmouse.com>
+
+Copyright:
+
+    Copyright ©2009-2010 WatchMouse
+
+License:
+
+    http://ec.europa.eu/idabc/eupl
+
+The Debian packaging is (C) 2010, Brian P Kroth <bpkroth@cae.wisc.edu> and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
+
+# Please also look if there are files or directories which have a
+# different copyright/license attached and list them here.

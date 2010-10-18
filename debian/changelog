@@ -1,0 +1,18 @@
+mysql-udf-ipv6 (0.3-1.2) lenny; urgency=low
+
+  * Fixing the post* actions.
+
+ -- Brian P Kroth <bpkroth@cae.wisc.edu>  Mon, 04 Oct 2010 09:19:30 -0500
+
+mysql-udf-ipv6 (0.3-1.1) lenny; urgency=low
+
+  * Support mysql 5.1 from lenny-backports as well.
+
+ -- Brian P Kroth <bpkroth@cae.wisc.edu>  Mon, 04 Oct 2010 09:12:17 -0500
+
+mysql-udf-ipv6 (0.3-1) lenny; urgency=low
+
+  * Initial release.
+
+ -- Brian P Kroth <bpkroth@cae.wisc.edu>  Mon, 20 Sep 2010 16:10:42 -0500
+

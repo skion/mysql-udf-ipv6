@@ -1,0 +1,16 @@
+Source: mysql-udf-ipv6
+Priority: extra
+Maintainer: Brian P Kroth <bpkroth@cae.wisc.edu>
+#Build-Depends: debhelper (>= 7), libmysqlclient-dev (>= 5.0.51)
+Build-Depends: debhelper (>= 7), libmysqlclient15-dev (>= 5.0.51)
+Standards-Version: 3.7.3
+Section: libs
+Homepage: http://labs.watchmouse.com/2009/10/extending-mysql-5-with-ipv6-functions/
+
+Package: mysql-udf-ipv6
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, mysql-server (>= 5.0.51)
+#Depends: ${shlibs:Depends}, ${misc:Depends}, mysql-server-5.0 (>= 5.0.51)
+Description: An ipv6 user defined function library for MySQL.
+ This library provides IPv6 inet_ntoa()/inet6_pton() and inet_aton()/inet6_ntop() support as user defined functions for MySQL.
