@@ -13,4 +13,4 @@ install:
 	cp -f $(OBJ) $(LIBDIR)
 
 clean:
-	rm *.so
+	rm -f *.so
