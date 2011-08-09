@@ -1,15 +1,17 @@
-IPv6 functions for MySQL
-------------------------
+IPv6 and internationalized domain (IDNA) functions for MySQL
+------------------------------------------------------------
 
-This is an experimental runtime plug-in (UDF) for MySQL
-that adds some basic IPv6 functions that MySQL v5 is still lacking:
-inet_ntop(3) and inet_pton(3).
+These are experimental runtime plug-in (UDF) for MySQL
+that add basic IPv6 and IDNA functions that MySQL v5 is still lacking:
+
+  inet6_ntop and inet6_pton()
+  idna_to_ascii() and idna_from_ascii()
 
 These files are experimental and provided as-is under a EUPL license.
 
 Pieter Ennes (pieter@watchmouse.com)
 
-Copyright ©2009-2010 WatchMouse
+Copyright ©2009-2011 WatchMouse
 
 
 LICENSE
@@ -33,7 +35,7 @@ DISCLAIMER
 ----------
 
 These plug-ins should be considered alpha quality at best. The install instructions are only for
-Debian GNU/Linux (etch/lenny) or derivatives at the moment.
+Debian GNU/Linux or derivatives at the moment.
 
 
 INSTALLATION
@@ -41,16 +43,23 @@ INSTALLATION
 
 Install required compile time dependencies, on Debian you probably catch most of them with:
 
-    $ apt-get install libmysqlclient-dev
+    $ apt-get install libc6-dev libmysqlclient-dev libidn11-dev
+
+Retrieve the source, from trunk:
+
+    $ hg clone https://bitbucket.org/watchmouse/mysql-udf-ipv6
+    $ cd mysql-udf-ipv6
+
+or by getting the latest archive:
+
+    $ curl https://bitbucket.org/watchmouse/mysql-udf-ipv6/get/tip.tar.bz2 | tar xvfj -
+    $ cd watchmouse-mysql-udf-ipv6-tip
 
 Compile the UDF:
 
-    $ wget http://labs.watchmouse.com/mysql-udf-ipv6-latest.tar.gz
-    $ tar xvfz mysql-udf-ipv6-latest.tar.gz
-    $ cd mysql-udf-ipv6-[version]
     $ make
 
-Install the shared object in your library search path:
+Install the shared objects in your MySQL plugin directory:
 
     $ sudo make install
 
@@ -59,6 +68,8 @@ Note that the plug-in install path has changed around MySQL version 5.0.67, make
 
 USAGE
 -----
+
+IPv6 functions:
 
 mysql> CREATE FUNCTION inet6_ntop RETURNS STRING SONAME "mysql_udf_ipv6.so";
 Query OK, 0 rows affected (0.02 sec)
@@ -75,8 +86,21 @@ Query OK, 0 rows affected (0.00 sec)
 mysql> CREATE FUNCTION inet6_mask RETURNS STRING SONAME "mysql_udf_ipv6.so";
 Query OK, 0 rows affected (0.00 sec)
 
+IDNA functions:
+
+mysql> CREATE FUNCTION idna_to_ascii RETURNS STRING SONAME "mysql_udf_idna.so";
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CREATE FUNCTION idna_from_ascii RETURNS STRING SONAME "mysql_udf_idna.so";
+Query OK, 0 rows affected (0.00 sec)
+
+
 Unload them with:
-mysql> drop function inet6_rlookup; drop function inet6_lookup; drop function inet6_pton; drop function inet6_ntop; drop function inet6_mask;
+
+mysql> DROP FUNCTION inet6_rlookup; DROP FUNCTION inet6_lookup;
+mysql> DROP FUNCTION inet6_pton; DROP FUNCTION inet6_ntop; DROP FUNCTION inet6_mask;
+
+mysql> DROP FUNCTION idna_to_ascii; DROP FUNCTION idna_from_ascii;
 
 
 EXAMPLES
@@ -157,3 +181,29 @@ mysql> select inet6_rlookup(inet6_pton('2a02:f8::ffff:ffe5')), inet6_rlookup(ine
 1 row in set (0.04 sec)
 
 Don't push too many rows through the lookup function, as each lookup may take many seconds to complete.
+
+Internationalized domain functions:
+
+mysql> select idna_to_ascii("testme.ভারত");
++--------------------------------------+
+| idna_to_ascii("testme.ভারত") |
++--------------------------------------+
+| testme.xn--45brj9c                   |
++--------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select idna_from_ascii("testme.xn--45brj9c");
++---------------------------------------+
+| idna_from_ascii("testme.xn--45brj9c") |
++---------------------------------------+
+| testme.ভারত                   |
++---------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select idna_from_ascii(idna_to_ascii("македонија.icom.museum"));
++--------------------------------------------------------------------+
+| idna_from_ascii(idna_to_ascii("македонија.icom.museum")) |
++--------------------------------------------------------------------+
+| македонија.icom.museum                                   |
++--------------------------------------------------------------------+
+1 row in set (0.00 sec)

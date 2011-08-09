@@ -7,7 +7,7 @@
  * email:  labs@watchmouse.com
  * web:    http://labs.watchmouse.com/mysql-udf-ipv6/
  *
- * Copyright (c) 2009 WatchMouse
+ * Copyright (c) 2009-2011 WatchMouse
  *
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -24,11 +24,8 @@
  *
  * $Id$
  *
- * @todo: allow inet_ntoa style (integer) input
- * @todo: allow big-int style input?
  */
 
-#include <mysql.h>
 #include <ctype.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -36,6 +33,8 @@
 #include <arpa/inet.h>          // for inet_ntop and inet_pton
 #include <netdb.h>
 #include <limits.h>
+
+#include <mysql/mysql.h>
 
 // 4 and 16 byte address lengths
 #define INET_ADDRLEN (sizeof(struct in_addr))
