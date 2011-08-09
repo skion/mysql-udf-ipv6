@@ -53,6 +53,16 @@ void inet6_ntop_deinit(UDF_INIT *initid);
 char *inet6_ntop(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length,
         char *null_value, char *error);
 
+my_bool inet6_aton_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+void inet6_aton_deinit(UDF_INIT *initid);
+char *inet6_aton(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length,
+        char *null_value, char *error);
+
+my_bool inet6_ntoa_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+void inet6_ntoa_deinit(UDF_INIT *initid);
+char *inet6_ntoa(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length,
+        char *null_value, char *error);
+
 my_bool inet6_mask_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 void inet6_mask_deinit(UDF_INIT *initid);
 char *inet6_mask(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length,
@@ -67,6 +77,44 @@ my_bool inet6_rlookup_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 void inet6_rlookup_deinit(UDF_INIT *initid);
 char *inet6_rlookup(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length,
         char *null_value, char *error);
+
+
+/**
+ * As of MySQL 5.6.3 the same functionality is provided via native INET6_NTOA() and INET6_ATON() functions.
+ * I've added aliases here to create a migration path from this module to the identical functions in future MySQL.
+ */
+#ifndef SKIP_MYSQL_COMPAT
+my_bool inet6_aton_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return inet6_pton_init(initid, args, message);
+}
+
+void inet6_aton_deinit(UDF_INIT *initid __attribute__((unused)))
+{
+}
+
+char *inet6_aton(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char *result, unsigned long *res_length,
+        char *null_value, char *error __attribute__((unused)))
+{
+    return inet6_pton(initid, args, result, res_length, null_value, error);
+}
+
+my_bool inet6_ntoa_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return inet6_ntop_init(initid, args, message);
+}
+
+void inet6_ntoa_deinit(UDF_INIT *initid __attribute__((unused)))
+{
+}
+
+char *inet6_ntoa(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char *result, unsigned long *res_length,
+        char *null_value, char *error __attribute__((unused)))
+{
+    return inet6_ntop(initid, args, result, res_length, null_value, error);
+}
+
+#endif /* MYSQL_COMPAT */
 
 /**
  * inet6_pton()

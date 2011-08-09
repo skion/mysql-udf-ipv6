@@ -22,6 +22,8 @@ set -e
 case "$1" in
     purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     	echo '
+DROP FUNCTION IF EXISTS inet6_ntoa;
+DROP FUNCTION IF EXISTS inet6_aton;
 DROP FUNCTION IF EXISTS inet6_ntop;
 DROP FUNCTION IF EXISTS inet6_pton;
 DROP FUNCTION IF EXISTS inet6_mask;
