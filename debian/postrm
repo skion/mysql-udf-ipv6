@@ -27,6 +27,8 @@ DROP FUNCTION IF EXISTS inet6_pton;
 DROP FUNCTION IF EXISTS inet6_mask;
 DROP FUNCTION IF EXISTS inet6_lookup;
 DROP FUNCTION IF EXISTS inet6_rlookup;
+DROP FUNCTION IF EXISTS idna_to_ascii;
+DROP FUNCTION IF EXISTS idna_from_ascii;
 ' \
 	| /usr/bin/mysql --defaults-extra-file=/etc/mysql/debian.cnf mysql
 ;;

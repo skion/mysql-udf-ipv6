@@ -1,5 +1,4 @@
-This package was debianized by Brian P Kroth <bpkroth@cae.wisc.edu> on
-Mon, 20 Sep 2010 16:10:42 -0500.
+This package was debianized by Brian P Kroth <bpkroth@cae.wisc.edu> on Mon, 20 Sep 2010 16:10:42 -0500.
 
 It was downloaded from <http://labs.watchmouse.com/2009/10/extending-mysql-5-with-ipv6-functions/>
 
@@ -9,7 +8,7 @@ Upstream Author(s):
 
 Copyright:
 
-    Copyright ©2009-2010 WatchMouse
+    Copyright ©2009-2011 WatchMouse
 
 License:
 

@@ -1,9 +1,15 @@
+mysql-udf-ipv6 (0.4) natty; urgency=low
+
+  * Adding internationalized domain name functions.
+
+ -- Pieter Ennes <pieter@watchmouse.com>  Wed, 10 Aug 2011 00:06:31 +0100
+
 mysql-udf-ipv6 (0.3-1.3) maverick; urgency=low
 
   * Use symlink hack for now to support both /usr/lib and /usr/lib/mysql/plugin install dirs.
   * Some dependency fiddling for Maverick.
 
- -- Pieter Ennes <pieter@kite>  Tue, 19 Oct 2010 00:12:13 +0100
+ -- Pieter Ennes <pieter@watchmouse.com>  Tue, 19 Oct 2010 00:12:13 +0100
 
 mysql-udf-ipv6 (0.3-1.2) lenny; urgency=low
 

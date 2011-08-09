@@ -1,7 +1,7 @@
 Source: mysql-udf-ipv6
 Priority: extra
 Maintainer: Brian P Kroth <bpkroth@cae.wisc.edu>
-Build-Depends: debhelper (>= 7), libmysqlclient-dev (>= 5.0.51) | libmysqlclient15-dev (>= 5.0.51) | libmysqlclient16-dev (>= 5.1.43)
+Build-Depends: debhelper (>= 7), libc6-dev, libmysqlclient-dev (>= 5.0.51) | libmysqlclient15-dev (>= 5.0.51) | libmysqlclient16-dev (>= 5.1.43), libidn11-dev
 Standards-Version: 3.7.3
 Section: libs
 Homepage: http://labs.watchmouse.com/2009/10/extending-mysql-5-with-ipv6-functions/
@@ -9,6 +9,7 @@ Homepage: http://labs.watchmouse.com/2009/10/extending-mysql-5-with-ipv6-functio
 Package: mysql-udf-ipv6
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, mysql-server (>= 5.0.51) | mysql-server-5.0 (>= 5.0.51) | mysql-server-5.1 (>= 5.1.43)
-Description: An ipv6 user defined function library for MySQL.
+Depends: ${shlibs:Depends}, ${misc:Depends}, mysql-server (>= 5.0.51) | mysql-server-5.0 (>= 5.0.51) | mysql-server-5.1 (>= 5.1.43), libidn11
+Description: A user defined library for MySQL containing IPv6 and IDNA support functions.
  This library provides IPv6 inet_ntoa()/inet6_pton() and inet_aton()/inet6_ntop() support as user defined functions for MySQL.
+ It also provides support for internationalised domain names via idna_from_ascii() and idna_to_ascii() functions.

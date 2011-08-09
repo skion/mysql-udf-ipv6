@@ -32,6 +32,10 @@ DROP FUNCTION IF EXISTS inet6_lookup;
 CREATE FUNCTION inet6_lookup RETURNS STRING SONAME "mysql_udf_ipv6.so";
 DROP FUNCTION IF EXISTS inet6_rlookup;
 CREATE FUNCTION inet6_rlookup RETURNS STRING SONAME "mysql_udf_ipv6.so";
+DROP FUNCTION IF EXISTS idna_to_ascii;
+CREATE FUNCTION idna_to_ascii RETURNS STRING SONAME "mysql_udf_idna.so";
+DROP FUNCTION IF EXISTS idna_from_ascii;
+CREATE FUNCTION idna_from_ascii RETURNS STRING SONAME "mysql_udf_idna.so";
 ' \
 	| /usr/bin/mysql --defaults-extra-file=/etc/mysql/debian.cnf mysql
     ;;
@@ -51,5 +55,3 @@ esac
 #DEBHELPER#
 
 exit 0
-
-

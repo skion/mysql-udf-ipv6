@@ -1,1 +1,1 @@
-usr/lib/mysql_udf_ipv6.so
+usr/lib/mysql/plugin/mysql_udf_ipv6.so

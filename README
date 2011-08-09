@@ -45,6 +45,7 @@ Install required compile time dependencies, on Debian you probably catch most of
 
     $ apt-get install libc6-dev libmysqlclient-dev libidn11-dev
 
+
 Retrieve the source, from trunk:
 
     $ hg clone https://bitbucket.org/watchmouse/mysql-udf-ipv6
@@ -55,11 +56,16 @@ or by getting the latest archive:
     $ curl https://bitbucket.org/watchmouse/mysql-udf-ipv6/get/tip.tar.bz2 | tar xvfj -
     $ cd watchmouse-mysql-udf-ipv6-tip
 
-Compile the UDF:
+Brian P Kroth was so kind to provide me with his Debian packaging work, which is now included:
+
+    $ dpkg-buildpackage -us -uc
+    $ sudo dpkg -i ../mysql-udf-ipv6_0.4_amd64.deb
+
+If you're not on Debian, compile the UDFs simply with:
 
     $ make
 
-Install the shared objects in your MySQL plugin directory:
+and install the shared objects into your MySQL plug-in directory:
 
     $ sudo make install
 

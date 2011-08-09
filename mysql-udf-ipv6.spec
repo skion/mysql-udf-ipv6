@@ -31,10 +31,12 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/usr/lib/mysql/plugin
 make install 
 cp /usr/lib/mysql/plugin/mysql_udf_ipv6.so $RPM_BUILD_ROOT/usr/lib/mysql/plugin/
+cp /usr/lib/mysql/plugin/mysql_udf_idna.so $RPM_BUILD_ROOT/usr/lib/mysql/plugin/
 
 %files
 %defattr(-,root,root)
 %doc README
 %doc Changelog
 /usr/lib/mysql/plugin/mysql_udf_ipv6.so
+/usr/lib/mysql/plugin/mysql_udf_idna.so
 
