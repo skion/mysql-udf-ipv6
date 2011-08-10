@@ -1,6 +1,24 @@
 IPv6 and internationalized domain (IDNA) functions for MySQL
 ------------------------------------------------------------
 
+======================
+IMPORTANT NOTICE:
+
+I'm very happy to see that as of MySQL 5.6.3 functions with an _identical_ API seem to be provided by MySQL, but
+with slightly different labels:
+
+    inet6_ntop() -> inet6_ntoa()
+    inet6_pton() -> inet6_atop()
+
+I've created aliases towards the native functions in the latest release of this UDF, with which this
+module should now provide you with a valid upgrade path. The native functions also operate on a VARBINARY(16).
+
+When loading the functions in this UDF, all examples in the manual work out of the box on pre-5.6 versions of MySQL:
+
+    http://dev.mysql.com/doc/refman/5.6/en/miscellaneous-functions.html#function_inet6-ntoa
+
+======================
+
 These are experimental runtime plug-in (UDF) for MySQL
 that add basic IPv6 and IDNA functions that MySQL v5 is still lacking:
 
