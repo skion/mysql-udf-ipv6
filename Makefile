@@ -1,8 +1,14 @@
-CFLAGS=-O2 -shared -fPIC
-LIBDIR=/usr/lib/mysql/plugin/
 
-# pre 5.0.67
-#LIBDIR=/usr/local/lib/
+# Debian/Ubuntu
+PREFIX=/usr
+
+# MacOS/XAMPP
+#PREFIX=/Applications/XAMPP/xamppfiles
+
+INCDIR=$(PREFIX)/include
+LIBDIR=$(PREFIX)/lib/mysql/plugin
+
+CFLAGS=-O2 -shared -fPIC -I$(INCDIR)
 
 all: mysql_udf_ipv6.so mysql_udf_idna.so
 

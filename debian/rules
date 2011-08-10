@@ -57,7 +57,7 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/tmp
-	$(MAKE) LIBDIR=$(CURDIR)/debian/mysql-udf-ipv6/usr/lib/mysql/plugin DESTDIR=$(CURDIR)/debian/tmp install
+	$(MAKE) PREFIX=$(CURDIR)/debian/mysql-udf-ipv6/usr DESTDIR=$(CURDIR)/debian/tmp install
 	# Symlink hack to support all distro's and versions
 	ln -s /usr/lib/mysql/plugin/mysql_udf_ipv6.so $(CURDIR)/debian/mysql-udf-ipv6/usr/lib/mysql_udf_ipv6.so  
 

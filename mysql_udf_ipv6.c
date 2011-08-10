@@ -114,7 +114,7 @@ char *inet6_ntoa(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char 
     return inet6_ntop(initid, args, result, res_length, null_value, error);
 }
 
-#endif /* MYSQL_COMPAT */
+#endif /* SKIP_MYSQL_COMPAT */
 
 /**
  * inet6_pton()

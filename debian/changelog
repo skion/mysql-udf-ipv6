@@ -1,3 +1,9 @@
+mysql-udf-ipv6 (0.5) natty; urgency=low
+
+  * Created aliases and migration path towards native INET6_NTOA() and INET6_ATON() in MySQL 5.6.3+.
+
+ -- Pieter Ennes <pieter@watchmouse.com>  Wed, 10 Aug 2011 00:49:51 +0100
+
 mysql-udf-ipv6 (0.4) natty; urgency=low
 
   * Adding internationalized domain name functions.
