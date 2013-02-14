@@ -164,15 +164,15 @@ char *inet6_pton(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, char 
     temp[length] = 0;
 
     // address family
-    if (strpbrk(temp, "."))
-    {
-        af = AF_INET;
-        length = INET_ADDRLEN;
-    }
-    else
+    if (strpbrk(temp, ":"))
     {
         af = AF_INET6;
         length = INET6_ADDRLEN;
+    }
+    else
+    {
+        af = AF_INET;
+        length = INET_ADDRLEN;
     }
 
     // convert
@@ -449,15 +449,15 @@ char *inet6_rlookup(UDF_INIT *initid __attribute__((unused)), UDF_ARGS *args, ch
         temp2[length] = 0;
 
         // address family
-        if (strpbrk(temp2, "."))
-        {
-            af = AF_INET;
-            length = INET_ADDRLEN;
-        }
-        else
+        if (strpbrk(temp2, ":"))
         {
             af = AF_INET6;
             length = INET6_ADDRLEN;
+        }
+        else
+        {
+            af = AF_INET;
+            length = INET_ADDRLEN;
         }
 
         // convert
